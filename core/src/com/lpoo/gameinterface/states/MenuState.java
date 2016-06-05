@@ -1,13 +1,15 @@
 package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 
@@ -25,10 +27,20 @@ public class MenuState extends State{
     private Sprite create_join_sprite;
     private Sprite exit_sprite;
 
+    private TextField name;
+    private TextureAtlas atlas;
+    private Skin skin;
+
     public MenuState(GameStateManager gsm) {
 
         super(gsm);
         background = new Texture("startmenu.png");
+
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        name = new TextField("",skin);
+        name.setText("Enter your name here!");
+        name.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/16);
+        name.setPosition(Gdx.graphics.getWidth()*1/12, Gdx.graphics.getHeight()*5/12);
 
         create_join_sprite = new Sprite(new Texture("createjoinroom.png"));
         exit_sprite = new Sprite(new Texture("exit.png"));
@@ -47,6 +59,7 @@ public class MenuState extends State{
         Gdx.input.setInputProcessor(stage);
         stage.addActor(create_join_btn);
         stage.addActor(exit_btn);
+        stage.addActor(name);
 
     }
 
@@ -69,6 +82,7 @@ public class MenuState extends State{
         sb.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         exit_btn.draw(sb, 1);
         create_join_btn.draw(sb, 1);
+        name.draw(sb,1);
         sb.end();
     }
 
