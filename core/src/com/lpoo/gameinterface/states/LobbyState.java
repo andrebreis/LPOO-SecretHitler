@@ -35,19 +35,19 @@ public class LobbyState extends State{
         back_sprite = new Sprite(new Texture("back.png"));
 
         create_btn = new Button(new SpriteDrawable(create_sprite));
-        create_btn.setSize(400,150);
-        create_btn.setX(600);
-        create_btn.setY(350);
+        create_btn.setSize(Gdx.graphics.getWidth()*2/5,Gdx.graphics.getHeight()*43/500);
+        create_btn.setX(Gdx.graphics.getWidth()*11/20);
+        create_btn.setY(Gdx.graphics.getHeight()*1/5);
 
         join_btn = new Button(new SpriteDrawable(join_sprite));
-        join_btn.setSize(400,150);
-        join_btn.setX(600);
-        join_btn.setY(200);
+        join_btn.setSize(Gdx.graphics.getWidth()*2/5,Gdx.graphics.getHeight()*43/500);
+        join_btn.setX(Gdx.graphics.getWidth()*11/20);
+        join_btn.setY(Gdx.graphics.getHeight()*57/500);
 
         back_btn = new Button(new SpriteDrawable(back_sprite));
-        back_btn.setSize(400,150);
-        back_btn.setX(600);
-        back_btn.setY(50);
+        back_btn.setSize(Gdx.graphics.getWidth()*2/5,Gdx.graphics.getHeight()*43/500);
+        back_btn.setX(Gdx.graphics.getWidth()*11/20);
+        back_btn.setY(Gdx.graphics.getHeight()*29/1000);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
