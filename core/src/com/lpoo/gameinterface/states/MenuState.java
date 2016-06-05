@@ -32,7 +32,6 @@ public class MenuState extends State{
 
         create_join_sprite = new Sprite(new Texture("createjoinroom.png"));
         exit_sprite = new Sprite(new Texture("exit.png"));
-
         create_join_btn = new Button(new SpriteDrawable(create_join_sprite));
         create_join_btn.setSize(500,200);
         create_join_btn.setX(80);
@@ -42,6 +41,7 @@ public class MenuState extends State{
         exit_btn.setSize(500,200);
         exit_btn.setX(80);
         exit_btn.setY(150);
+
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
