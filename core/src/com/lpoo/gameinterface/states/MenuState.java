@@ -66,7 +66,7 @@ public class MenuState extends State{
     public void handleInput() {
         if(createJoinBtn.isPressed()){
             this.me = new Player(name.getText());
-            gsm.set(new LobbyState(gsm, this));
+            gsm.set(new LobbyState(gsm,this));
             dispose();
         }
     }

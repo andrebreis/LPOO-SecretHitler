@@ -17,11 +17,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 public class WaitingState extends State {
 
     private Texture background;
+
     private Label label;
+
     private Button startBtn;
+    private Button backBtn;
+
     private Skin skin;
+
     private Sprite startSprite;
+    private Sprite backSprite;
+
     private Stage stage;
+
+
 
     public WaitingState(GameStateManager gsm, State state) {
         super(gsm, state);
@@ -40,10 +49,17 @@ public class WaitingState extends State {
         startBtn.setX(Gdx.graphics.getWidth() * 1 / 2 - startBtn.getWidth() / 2);
         startBtn.setY(Gdx.graphics.getHeight() * 1 / 2 - startBtn.getHeight() / 2);
 
+        backSprite = new Sprite(new Texture("back.png"));
+        backBtn = new Button(new SpriteDrawable(backSprite));
+        backBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
+        backBtn.setX(Gdx.graphics.getWidth() * 1 / 2 - startBtn.getWidth() / 2);
+        backBtn.setY(Gdx.graphics.getHeight()*1/4);
+
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(startBtn);
+        stage.addActor(backBtn);
         stage.addActor(label);
         System.out.println(me.toString());
 
@@ -52,12 +68,16 @@ public class WaitingState extends State {
 
     @Override
     public void handleInput() {
-        if(me.getPosition() == 0 && allPlayers.size() > 4) {
+        //if(me.getPosition() == 0 && allPlayers.size() > 4) {
             if (startBtn.isPressed()) {
                 gsm.set(new PlayState(gsm));
                 dispose();
             }
-        }
+            if(backBtn.isPressed()){
+                gsm.set(new LobbyState(gsm,this));
+                dispose();
+            }
+        //}
      //   System.out.println("players: ");
       //  for(Player p : allPlayers)
        //     System.out.println(p.toString());
@@ -73,8 +93,9 @@ public class WaitingState extends State {
         label.setText("WAITING FOR PLAYERS...  " + allPlayers.size() + "/10");
         sb.begin();
         sb.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if(me.getPosition() == 0 && allPlayers.size() > 4)
+        //if(me.getPosition() == 0 && allPlayers.size() > 4)
             startBtn.draw(sb, 1);
+        backBtn.draw(sb,1);
         label.draw(sb, 1);
         sb.end();
     }
