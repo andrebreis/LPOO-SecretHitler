@@ -2,6 +2,7 @@ package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
 
 import java.util.ArrayList;
@@ -19,11 +20,14 @@ public abstract class State {
     protected Socket socket;
     protected Player me;
     protected ArrayList<Player> allPlayers;
+    protected GameBoard board;
 
     protected State (GameStateManager gsm)
     {
         this.gsm = gsm;
         this.allPlayers = new ArrayList<Player>();
+        this.board = null;
+        this.socket = null;
     }
 
     protected State(GameStateManager gsm, State copyState){

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.lpoo.gamelogic.Player;
 
 /**
  * Created by Vasco on 06/06/2016.
@@ -39,9 +40,9 @@ public class WaitingState extends State {
 
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         label = new Label("WAITING FOR PLAYERS...  " + allPlayers.size() + "/10", skin);
-        label.setFontScale(6);
+        label.setFontScale(Gdx.graphics.getWidth()/800);
         label.setColor(Color.BLACK);
-        label.setPosition(Gdx.graphics.getWidth()/8, Gdx.graphics.getHeight() * 350 / 480);
+        label.setPosition(Gdx.graphics.getWidth()*3/8, Gdx.graphics.getHeight() * 350 / 480);
 
         startSprite = new Sprite(new Texture("start.png"));
         startBtn = new Button(new SpriteDrawable(startSprite));
@@ -61,23 +62,25 @@ public class WaitingState extends State {
         stage.addActor(startBtn);
         stage.addActor(backBtn);
         stage.addActor(label);
-        System.out.println(me.toString());
 
        // System.out.println(me.toString());
     }
 
     @Override
     public void handleInput() {
-        //if(me.getPosition() == 0 && allPlayers.size() > 4) {
+        if(me.getPosition() == 0 && allPlayers.size() > 4) {
             if (startBtn.isPressed()) {
                 gsm.set(new PlayState(gsm));
                 dispose();
             }
-            if(backBtn.isPressed()){
-                gsm.set(new LobbyState(gsm,this));
-                dispose();
-            }
-        //}
+        }
+        if(backBtn.isPressed()){
+            allPlayers.remove(me.getPosition());
+            socket = socket.disconnect();
+            gsm.set(new LobbyState(gsm,this));
+            dispose();
+
+        }
      //   System.out.println("players: ");
       //  for(Player p : allPlayers)
        //     System.out.println(p.toString());
@@ -93,7 +96,7 @@ public class WaitingState extends State {
         label.setText("WAITING FOR PLAYERS...  " + allPlayers.size() + "/10");
         sb.begin();
         sb.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //if(me.getPosition() == 0 && allPlayers.size() > 4)
+        if(me.getPosition() == 0 && allPlayers.size() > 4)
             startBtn.draw(sb, 1);
         backBtn.draw(sb,1);
         label.draw(sb, 1);

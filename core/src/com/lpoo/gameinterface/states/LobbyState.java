@@ -37,8 +37,9 @@ public class LobbyState extends State{
     private Sprite joinServerSprite;
     private Sprite backSprite;
 
-    private TextField ip;
+    private TextField ipField;
     private Skin skin;
+
 
     public LobbyState(GameStateManager gsm, State state) {
         super(gsm, state);
@@ -59,23 +60,24 @@ public class LobbyState extends State{
         backBtn.setY(Gdx.graphics.getHeight()*1/12);
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        ip = new TextField("",skin);
-        ip.setMessageText("Enter your IP here!");
-        ip.setSize(Gdx.graphics.getWidth()*5/11,Gdx.graphics.getHeight()*1/8);
-        ip.setPosition(Gdx.graphics.getWidth()*3/4-ip.getWidth()/2, Gdx.graphics.getHeight()*10/12);
+        ipField = new TextField("",skin);
+        ipField.setMessageText("Enter your IP here!");
+        ipField.setSize(Gdx.graphics.getWidth()*5/11,Gdx.graphics.getHeight()*1/8);
+        ipField.setPosition(Gdx.graphics.getWidth()*3/4- ipField.getWidth()/2, Gdx.graphics.getHeight()*10/12);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(joinServerBtn);
         stage.addActor(backBtn);
-
+        stage.addActor(ipField);
     }
 
     @Override
     public void handleInput() {
         if(joinServerBtn.isPressed()){
-            connectSocket();
-            configSocketEvents();
+    
+                connectSocket();
+                configSocketEvents();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -101,7 +103,7 @@ public class LobbyState extends State{
         sb.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         joinServerBtn.draw(sb, 1);
         backBtn.draw(sb,1);
-        ip.draw(sb,1);
+        ipField.draw(sb,1);
         sb.end();
     }
 
@@ -116,9 +118,11 @@ public class LobbyState extends State{
 
     public void connectSocket(){
         String ip = "http://localhost:8080"; // ipField.getText();
+        if(!ipField.getText().equals(""))
+            ip = ipField.getText();
         try {
-            socket = IO.socket(ip);
-            socket.connect();
+                socket = IO.socket(ip);
+                socket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -164,7 +168,20 @@ public class LobbyState extends State{
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
-                    String id = data.getString("id");
+                    int position = data.getInt("position");
+                    System.out.println(position);
+                    if(board == null){
+                        allPlayers.remove(position);
+                        for(Player p : allPlayers)
+                            System.out.println(p.toString());
+                        for(int i = 0; i < allPlayers.size(); i++)
+                            allPlayers.get(i).setPosition(i);
+                    }
+                    else{
+                        allPlayers.get(position).setPlaying(false);
+                        for(Player p : allPlayers)
+                            System.out.println(p.toString());
+                    }
                     //if gamestarted ... etc
                     //allPlayers.remove
                 } catch (JSONException e) {
