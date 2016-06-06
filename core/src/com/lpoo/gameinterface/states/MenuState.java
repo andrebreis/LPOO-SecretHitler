@@ -1,15 +1,11 @@
 package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -24,11 +20,11 @@ public class MenuState extends State{
 
     private Texture background;
 
-    private Button create_join_btn;
-    private Button exit_btn;
+    private Button createJoinBtn;
+    private Button exitBtn;
 
-    private Sprite create_join_sprite;
-    private Sprite exit_sprite;
+    private Sprite createJoinSprite;
+    private Sprite exitSprite;
 
     private TextField name;
     private Skin skin;
@@ -45,30 +41,30 @@ public class MenuState extends State{
         name.setPosition(Gdx.graphics.getWidth()*1/12, Gdx.graphics.getHeight()*5/12);
 
 
-        create_join_sprite = new Sprite(new Texture("createjoinroom.png"));
-        exit_sprite = new Sprite(new Texture("exit.png"));
-        create_join_btn = new Button(new SpriteDrawable(create_join_sprite));
-        create_join_btn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        create_join_btn.setX(Gdx.graphics.getWidth()*1/12);
-        create_join_btn.setY(Gdx.graphics.getHeight()*3/12);
+        createJoinSprite = new Sprite(new Texture("createjoinroom.png"));
+        exitSprite = new Sprite(new Texture("exit.png"));
+        createJoinBtn = new Button(new SpriteDrawable(createJoinSprite));
+        createJoinBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
+        createJoinBtn.setX(Gdx.graphics.getWidth()*1/12);
+        createJoinBtn.setY(Gdx.graphics.getHeight()*3/12);
 
-        exit_btn = new Button(new SpriteDrawable(exit_sprite));
-        exit_btn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        exit_btn.setX(Gdx.graphics.getWidth()*1/12);
-        exit_btn.setY(Gdx.graphics.getHeight()*1/12);
+        exitBtn = new Button(new SpriteDrawable(exitSprite));
+        exitBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
+        exitBtn.setX(Gdx.graphics.getWidth()*1/12);
+        exitBtn.setY(Gdx.graphics.getHeight()*1/12);
 
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        stage.addActor(create_join_btn);
-        stage.addActor(exit_btn);
+        stage.addActor(createJoinBtn);
+        stage.addActor(exitBtn);
         stage.addActor(name);
 
     }
 
     @Override
     public void handleInput() {
-        if(create_join_btn.isPressed()){
+        if(createJoinBtn.isPressed()){
             this.me = new Player(name.getText());
             gsm.set(new LobbyState(gsm, this));
             dispose();
@@ -84,8 +80,8 @@ public class MenuState extends State{
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.draw(background, 0, 0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        exit_btn.draw(sb, 1);
-        create_join_btn.draw(sb, 1);
+        exitBtn.draw(sb, 1);
+        createJoinBtn.draw(sb, 1);
         name.draw(sb,1);
         sb.end();
     }
@@ -93,7 +89,7 @@ public class MenuState extends State{
     @Override
     public void dispose() {
         background.dispose();
-        create_join_sprite.getTexture().dispose();
-        exit_sprite.getTexture().dispose();
+        createJoinSprite.getTexture().dispose();
+        exitSprite.getTexture().dispose();
     }
 }

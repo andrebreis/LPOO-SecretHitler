@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.lpoo.gamelogic.Player;
 
 /**
  * Created by Vasco on 06/06/2016.
@@ -18,9 +17,9 @@ public class WaitingState extends State {
 
     private Texture background;
     private Label label;
-    private Button start_btn;
+    private Button startBtn;
     private Skin skin;
-    private Sprite start_sprite;
+    private Sprite startSprite;
     private Stage stage;
 
     public WaitingState(GameStateManager gsm, State state) {
@@ -33,16 +32,16 @@ public class WaitingState extends State {
         label.setFontScale(5);
         label.setPosition(Gdx.graphics.getWidth() * 553 / 800, Gdx.graphics.getHeight() * 345 / 480);
 
-        start_sprite = new Sprite(new Texture("start.png"));
-        start_btn = new Button(new SpriteDrawable(start_sprite));
-        start_btn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        start_btn.setX(Gdx.graphics.getWidth() * 1 / 2 - start_btn.getWidth() / 2);
-        start_btn.setY(Gdx.graphics.getHeight() * 1 / 2 - start_btn.getHeight() / 2);
+        startSprite = new Sprite(new Texture("start.png"));
+        startBtn = new Button(new SpriteDrawable(startSprite));
+        startBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
+        startBtn.setX(Gdx.graphics.getWidth() * 1 / 2 - startBtn.getWidth() / 2);
+        startBtn.setY(Gdx.graphics.getHeight() * 1 / 2 - startBtn.getHeight() / 2);
 
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        stage.addActor(start_btn);
+        stage.addActor(startBtn);
         stage.addActor(label);
         System.out.println(me.toString());
 
@@ -52,7 +51,7 @@ public class WaitingState extends State {
     @Override
     public void handleInput() {
         if(me.getPosition() == 0 && allPlayers.size() > 4) {
-            if (start_btn.isPressed()) {
+            if (startBtn.isPressed()) {
                 gsm.set(new PlayState(gsm));
                 dispose();
             }
@@ -73,7 +72,7 @@ public class WaitingState extends State {
         sb.begin();
         sb.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         if(me.getPosition() == 0 && allPlayers.size() > 4)
-            start_btn.draw(sb, 1);
+            startBtn.draw(sb, 1);
         label.draw(sb, 1);
         sb.end();
     }
@@ -81,6 +80,6 @@ public class WaitingState extends State {
     @Override
     public void dispose() {
         background.dispose();
-        start_sprite.getTexture().dispose();
+        startSprite.getTexture().dispose();
     }
 }

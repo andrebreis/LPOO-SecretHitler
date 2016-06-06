@@ -29,48 +29,48 @@ public class LobbyState extends State{
 
     private Texture background;
 
-    private Button create_btn;
-    private Button join_btn;
-    private Button back_btn;
+    private Button createBtn;
+    private Button joinBtn;
+    private Button backBtn;
 
-    private Sprite create_sprite;
-    private Sprite join_sprite;
-    private Sprite back_sprite;
+    private Sprite createSprite;
+    private Sprite joinSprite;
+    private Sprite backSprite;
 
     public LobbyState(GameStateManager gsm, State state) {
         super(gsm, state);
         background = new Texture("gamelobby.png");
 
-        create_sprite = new Sprite(new Texture("createroom.png"));
-        join_sprite = new Sprite(new Texture("joinroom.png"));
-        back_sprite = new Sprite(new Texture("back.png"));
+        createSprite = new Sprite(new Texture("createroom.png"));
+        joinSprite = new Sprite(new Texture("joinroom.png"));
+        backSprite = new Sprite(new Texture("back.png"));
 
-        create_btn = new Button(new SpriteDrawable(create_sprite));
-        create_btn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
-        create_btn.setX(Gdx.graphics.getWidth()*11/20);
-        create_btn.setY(Gdx.graphics.getHeight() * 1 / 5);
+        createBtn = new Button(new SpriteDrawable(createSprite));
+        createBtn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
+        createBtn.setX(Gdx.graphics.getWidth()*11/20);
+        createBtn.setY(Gdx.graphics.getHeight() * 1 / 5);
 
-        join_btn = new Button(new SpriteDrawable(join_sprite));
-        join_btn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
-        join_btn.setX(Gdx.graphics.getWidth()*11/20);
-        join_btn.setY(Gdx.graphics.getHeight() * 57 / 500);
+        joinBtn = new Button(new SpriteDrawable(joinSprite));
+        joinBtn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
+        joinBtn.setX(Gdx.graphics.getWidth()*11/20);
+        joinBtn.setY(Gdx.graphics.getHeight() * 57 / 500);
 
-        back_btn = new Button(new SpriteDrawable(back_sprite));
-        back_btn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
-        back_btn.setX(Gdx.graphics.getWidth()*11/20);
-        back_btn.setY(Gdx.graphics.getHeight() * 29 / 1000);
+        backBtn = new Button(new SpriteDrawable(backSprite));
+        backBtn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
+        backBtn.setX(Gdx.graphics.getWidth()*11/20);
+        backBtn.setY(Gdx.graphics.getHeight() * 29 / 1000);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        stage.addActor(create_btn);
-        stage.addActor(join_btn);
-        stage.addActor(back_btn);
+        stage.addActor(createBtn);
+        stage.addActor(joinBtn);
+        stage.addActor(backBtn);
 
     }
 
     @Override
     public void handleInput() {
-        if(create_btn.isPressed()){
+        if(createBtn.isPressed()){
             connectSocket();
             configSocketEvents();
             try {
@@ -81,7 +81,7 @@ public class LobbyState extends State{
             gsm.set(new WaitingState(gsm, this));
             dispose();
         }
-        if(back_btn.isPressed()){
+        if(backBtn.isPressed()){
             gsm.set(new MenuState(gsm));
             dispose();
         }
@@ -96,9 +96,9 @@ public class LobbyState extends State{
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        create_btn.draw(sb, 1);
-        join_btn.draw(sb, 1);
-        back_btn.draw(sb,1);
+        createBtn.draw(sb, 1);
+        joinBtn.draw(sb, 1);
+        backBtn.draw(sb,1);
         sb.end();
     }
 
@@ -106,9 +106,9 @@ public class LobbyState extends State{
     public void dispose() {
 
         background.dispose();
-        create_sprite.getTexture().dispose();
-        back_sprite.getTexture().dispose();
-        join_sprite.getTexture().dispose();
+        createSprite.getTexture().dispose();
+        backSprite.getTexture().dispose();
+        joinSprite.getTexture().dispose();
 
     }
 
