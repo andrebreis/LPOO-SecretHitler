@@ -60,7 +60,7 @@ public class LobbyState extends State{
     @Override
     public void handleInput() {
         if(create_btn.isPressed()){
-            gsm.set(new PlayState(gsm));
+            gsm.set(new WaitingState(gsm));
             dispose();
         }
         if(back_btn.isPressed()){
