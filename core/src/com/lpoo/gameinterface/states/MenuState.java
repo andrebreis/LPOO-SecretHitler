@@ -37,20 +37,20 @@ public class MenuState extends State{
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         name = new TextField("",skin);
         name.setMessageText("Enter your name here!");
-        name.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/16);
-        name.setPosition(Gdx.graphics.getWidth()*1/12, Gdx.graphics.getHeight()*5/12);
+        name.setSize(Gdx.graphics.getWidth()*5/11,Gdx.graphics.getHeight()*1/8);
+        name.setPosition(Gdx.graphics.getWidth()*3/4-name.getWidth()/2, Gdx.graphics.getHeight()*10/12);
 
 
         createJoinSprite = new Sprite(new Texture("createjoinroom.png"));
         exitSprite = new Sprite(new Texture("exit.png"));
         createJoinBtn = new Button(new SpriteDrawable(createJoinSprite));
-        createJoinBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        createJoinBtn.setX(Gdx.graphics.getWidth()*1/12);
-        createJoinBtn.setY(Gdx.graphics.getHeight()*3/12);
+        createJoinBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*2/7);
+        createJoinBtn.setX(Gdx.graphics.getWidth()*3/4-createJoinBtn.getWidth()/2);
+        createJoinBtn.setY(Gdx.graphics.getHeight()/2);
 
         exitBtn = new Button(new SpriteDrawable(exitSprite));
-        exitBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        exitBtn.setX(Gdx.graphics.getWidth()*1/12);
+        exitBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*2/7);
+        exitBtn.setX(Gdx.graphics.getWidth()*3/4-exitBtn.getWidth()/2);
         exitBtn.setY(Gdx.graphics.getHeight()*1/12);
 
 

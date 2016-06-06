@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.lpoo.gamelogic.Player;
 
@@ -29,48 +31,49 @@ public class LobbyState extends State{
 
     private Texture background;
 
-    private Button createBtn;
-    private Button joinBtn;
+    private Button joinServerBtn;
     private Button backBtn;
 
-    private Sprite createSprite;
-    private Sprite joinSprite;
+    private Sprite joinServerSprite;
     private Sprite backSprite;
+
+    private TextField ip;
+    private Skin skin;
 
     public LobbyState(GameStateManager gsm, State state) {
         super(gsm, state);
         background = new Texture("gamelobby.png");
 
-        createSprite = new Sprite(new Texture("createroom.png"));
-        joinSprite = new Sprite(new Texture("joinroom.png"));
+        joinServerSprite = new Sprite(new Texture("joinserver.png"));
         backSprite = new Sprite(new Texture("back.png"));
 
-        createBtn = new Button(new SpriteDrawable(createSprite));
-        createBtn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
-        createBtn.setX(Gdx.graphics.getWidth()*11/20);
-        createBtn.setY(Gdx.graphics.getHeight() * 1 / 5);
+        joinServerBtn = new Button(new SpriteDrawable(joinServerSprite));
+        joinServerBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*2/7);
+        joinServerBtn.setX(Gdx.graphics.getWidth()*3/4-joinServerBtn.getWidth()/2);
+        joinServerBtn.setY(Gdx.graphics.getHeight()/2);
 
-        joinBtn = new Button(new SpriteDrawable(joinSprite));
-        joinBtn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
-        joinBtn.setX(Gdx.graphics.getWidth()*11/20);
-        joinBtn.setY(Gdx.graphics.getHeight() * 57 / 500);
 
         backBtn = new Button(new SpriteDrawable(backSprite));
-        backBtn.setSize(Gdx.graphics.getWidth() * 2 / 5, Gdx.graphics.getHeight() * 43 / 500);
-        backBtn.setX(Gdx.graphics.getWidth()*11/20);
-        backBtn.setY(Gdx.graphics.getHeight() * 29 / 1000);
+        backBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*2/7);
+        backBtn.setX(Gdx.graphics.getWidth()*3/4-backBtn.getWidth()/2);
+        backBtn.setY(Gdx.graphics.getHeight()*1/12);
+
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        ip = new TextField("",skin);
+        ip.setMessageText("Enter your IP here!");
+        ip.setSize(Gdx.graphics.getWidth()*5/11,Gdx.graphics.getHeight()*1/8);
+        ip.setPosition(Gdx.graphics.getWidth()*3/4-ip.getWidth()/2, Gdx.graphics.getHeight()*10/12);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        stage.addActor(createBtn);
-        stage.addActor(joinBtn);
+        stage.addActor(joinServerBtn);
         stage.addActor(backBtn);
 
     }
 
     @Override
     public void handleInput() {
-        if(createBtn.isPressed()){
+        if(joinServerBtn.isPressed()){
             connectSocket();
             configSocketEvents();
             try {
@@ -96,9 +99,9 @@ public class LobbyState extends State{
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        createBtn.draw(sb, 1);
-        joinBtn.draw(sb, 1);
+        joinServerBtn.draw(sb, 1);
         backBtn.draw(sb,1);
+        ip.draw(sb,1);
         sb.end();
     }
 
@@ -106,9 +109,8 @@ public class LobbyState extends State{
     public void dispose() {
 
         background.dispose();
-        createSprite.getTexture().dispose();
+        joinServerSprite.getTexture().dispose();
         backSprite.getTexture().dispose();
-        joinSprite.getTexture().dispose();
 
     }
 

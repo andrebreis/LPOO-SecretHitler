@@ -1,6 +1,7 @@
 package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,9 +29,10 @@ public class WaitingState extends State {
         background = new Texture("waitingstate.jpg");
 
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        label = new Label(Integer.toString(allPlayers.size()), skin);
-        label.setFontScale(5);
-        label.setPosition(Gdx.graphics.getWidth() * 553 / 800, Gdx.graphics.getHeight() * 345 / 480);
+        label = new Label("WAITING FOR PLAYERS...  " + allPlayers.size() + "/10", skin);
+        label.setFontScale(6);
+        label.setColor(Color.BLACK);
+        label.setPosition(Gdx.graphics.getWidth()/8, Gdx.graphics.getHeight() * 350 / 480);
 
         startSprite = new Sprite(new Texture("start.png"));
         startBtn = new Button(new SpriteDrawable(startSprite));
@@ -68,7 +70,7 @@ public class WaitingState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        label.setText(Integer.toString(allPlayers.size()));
+        label.setText("WAITING FOR PLAYERS...  " + allPlayers.size() + "/10");
         sb.begin();
         sb.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         if(me.getPosition() == 0 && allPlayers.size() > 4)
