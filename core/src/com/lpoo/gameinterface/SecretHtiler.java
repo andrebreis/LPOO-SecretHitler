@@ -8,8 +8,8 @@ import com.lpoo.gameinterface.states.GameStateManager;
 import com.lpoo.gameinterface.states.MenuState;
 
 public class SecretHtiler extends ApplicationAdapter {
-	public static final int WIDTH = 480;
-	public static final int HEIGHT = 800;
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 480;
 	public static final String TITLE = "Secret Hitler";
 
 	private GameStateManager gsm;
@@ -19,7 +19,7 @@ public class SecretHtiler extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		gsm.push(new MenuState(gsm));
 	}
 

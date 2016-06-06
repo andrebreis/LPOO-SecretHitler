@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.lpoo.gamelogic.Player;
 
 
 /**
@@ -37,9 +38,9 @@ public class MenuState extends State{
         super(gsm);
         background = new Texture("startmenu.png");
 
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
         name = new TextField("",skin);
-        name.setText("Enter your name here!");
+        name.setMessageText("Enter your name here!");
         name.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/16);
         name.setPosition(Gdx.graphics.getWidth()*1/12, Gdx.graphics.getHeight()*5/12);
 
@@ -68,7 +69,8 @@ public class MenuState extends State{
     @Override
     public void handleInput() {
         if(create_join_btn.isPressed()){
-            gsm.set(new LobbyState(gsm));
+            this.me = new Player(name.getText());
+            gsm.set(new LobbyState(gsm, this));
             dispose();
         }
     }

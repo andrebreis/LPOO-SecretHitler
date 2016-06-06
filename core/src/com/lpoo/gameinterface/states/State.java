@@ -2,6 +2,11 @@ package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.lpoo.gamelogic.Player;
+
+import java.util.ArrayList;
+
+import io.socket.client.Socket;
 
 /**
  * Created by Vasco on 05/06/2016.
@@ -10,9 +15,22 @@ import com.badlogic.gdx.math.Vector3;
 
 public abstract class State {
     protected GameStateManager gsm;
+
+    protected Socket socket;
+    protected Player me;
+    protected ArrayList<Player> allPlayers;
+
     protected State (GameStateManager gsm)
     {
         this.gsm = gsm;
+        this.allPlayers = new ArrayList<Player>();
+    }
+
+    protected State(GameStateManager gsm, State copyState){
+        this.gsm = gsm;
+        this.socket = copyState.socket;
+        this.me = copyState.me;
+        this.allPlayers = copyState.allPlayers;
     }
 
     protected abstract void handleInput();
