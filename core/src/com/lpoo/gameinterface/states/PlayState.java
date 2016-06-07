@@ -7,6 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.lpoo.gamelogic.Player;
+import com.sun.javafx.scene.paint.GradientUtils;
+import com.sun.xml.internal.ws.dump.LoggingDumpTube;
+
+import java.awt.Point;
 
 
 /**
@@ -14,16 +19,25 @@ import com.badlogic.gdx.utils.Array;
  */
 public class PlayState extends State {
     private Texture background;
+    private Texture president;
+    private Texture chancellor;
     private Skin skin;
     private Label label;
     private Stage stage;
     private String[] players = {"Joao", "Manuel", "Joaquim", "Broas", "Rui", "Paulo", "Vasco", "Tomas", "Jose", "Nuno"};
     private Label[] labels;
+    private Point presidentPoint;
+    private Point chancellorPoint;
+
     protected PlayState(GameStateManager gsm) {
         super(gsm);
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
         background = new Texture("boardgame.jpg");
+        president = new Texture ("president.png");
+        chancellor = new Texture ("chancellor.png");
+
         labels = new Label[players.length];
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         for(int i = 0; i < players.length; i++){
@@ -59,6 +73,22 @@ public class PlayState extends State {
     @Override
     public void dispose() {
         background.dispose();
+        president.dispose();
+        chancellor.dispose();
+    }
+
+    public void  setPlatePosition(Player p, Point point){
+        if (labels [p.getPosition()].getX()  == 0){
+            point.setLocation(Gdx.graphics.getWidth()*1/5,labels [p.getPosition()].getY());
+        }
+        else if(labels [p.getPosition()].getX()  == Gdx.graphics.getWidth()*8/9){
+            point.setLocation(Gdx.graphics.getWidth()*4/5,labels [p.getPosition()].getY());
+        } else if (labels[p.getPosition()].getY() == Gdx.graphics.getHeight() * 1 / 20) {
+            point.setLocation(labels [p.getPosition()].getX(),Gdx.graphics.getHeight() * 3 / 20);
+        }
+        else if(labels[p.getPosition()].getY() == Gdx.graphics.getHeight() * 14 / 15){
+            point.setLocation(labels [p.getPosition()].getX(),Gdx.graphics.getHeight() * 12 / 15);
+        }
     }
 
     public void setPositions(Label[] labels) {
