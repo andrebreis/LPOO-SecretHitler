@@ -220,64 +220,18 @@ public class PlayState extends State {
     }
 
     public void setTicksPositions(ArrayList<Button> buttons) {
-        switch (buttons.size()){
-            case 5:
-                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()/2);
-                buttons.get(1).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(1).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(2).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(3).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(3).getWidth(),Gdx.graphics.getHeight()/2);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(5).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                break;
-            case 6:
-                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()/2);
-                buttons.get(1).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(1).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(2).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(3).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(3).getWidth(),Gdx.graphics.getHeight()/2);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(4).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(5).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(5).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                break;
-            case 7:
-                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(3).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(4).getWidth(),Gdx.graphics.getHeight()/2);
-                buttons.get(5).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(5).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(6).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(6).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                break;
-            case 8:
-                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(3).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(4).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(5).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(5).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(6).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(6).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                break;
-            case 9:
-                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(3).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(4).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(5).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(5).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(6).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(6).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(7).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(8).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(8).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                break;
-            case 10:
-                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(3).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(4).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(4).getWidth()/2,Gdx.graphics.getHeight()*27/30);
-                buttons.get(5).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(5).getWidth(),Gdx.graphics.getHeight()*2/5);
-                buttons.get(6).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(6).getWidth(),Gdx.graphics.getHeight()*4/5);
-                buttons.get(7).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(8).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(8).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(9).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(9).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                break;
+        for(int i = 0; i < buttons.size(); i++){
+            if (labels.get(i).getX()  == 0){
+                buttons.get(i).setPosition(labels.get(i).getWidth(),labels.get(i).getY());
+            }
+            else if(labels.get(i).getX()  == Gdx.graphics.getWidth()*8/9){
+                buttons.get(i).setPosition(labels.get(i).getX()-Gdx.graphics.getWidth()/30,labels.get(i).getY());
+            } else if (labels.get(i).getY() == Gdx.graphics.getHeight() * 1 / 20) {
+                buttons.get(i).setPosition(labels.get(i).getX()+labels.get(i).getWidth()/2,Gdx.graphics.getHeight() * 3 / 20);
+            }
+            else if(labels.get(i).getY() == Gdx.graphics.getHeight() * 14 / 15){
+                buttons.get(i).setPosition(labels.get(i).getX()+labels.get(i).getWidth()/2,Gdx.graphics.getHeight() * 12 / 15);
+            }
         }
     }
 }
