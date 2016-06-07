@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
+import com.lpoo.gamelogic.SecretHitler;
 
 import java.util.ArrayList;
 
@@ -20,14 +21,16 @@ public abstract class State {
     protected Socket socket;
     protected Player me;
     protected ArrayList<Player> allPlayers;
-    protected GameBoard board;
+    protected SecretHitler gameInfo;
+    protected boolean gameStarted = false;
     protected boolean advanceState;
 
     protected State (GameStateManager gsm)
     {
         this.gsm = gsm;
         this.allPlayers = new ArrayList<Player>();
-        this.board = null;
+       // this.board = null;
+        this.gameInfo = new SecretHitler();
         this.socket = null;
         this.advanceState = false;
     }
@@ -37,6 +40,7 @@ public abstract class State {
         this.socket = copyState.socket;
         this.me = copyState.me;
         this.allPlayers = copyState.allPlayers;
+        this.gameStarted = copyState.gameStarted;
     }
 
     protected abstract void handleInput();

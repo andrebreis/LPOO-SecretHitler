@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
+import com.lpoo.gamelogic.SecretHitler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -180,7 +181,7 @@ public class LobbyState extends State{
                 try {
                     int position = data.getInt("position");
                     System.out.println(position);
-                    if(board == null){
+                    if(!gameStarted){
                         allPlayers.remove(position);
                         for(int i = 0; i < allPlayers.size(); i++)
                             allPlayers.get(i).setPosition(i);
@@ -216,6 +217,7 @@ public class LobbyState extends State{
                     //JSONArray deck = data.getJSONArray("deck");
                     //board = new GameBoard();
                     //board.createDeck(deck);
+                    gameStarted = true;
                     JSONArray players = data.getJSONArray("players");
                     for(int i = 0; i < players.length(); i++){
                         JSONObject player = players.getJSONObject(i);
@@ -227,6 +229,29 @@ public class LobbyState extends State{
                 }
                 waitingState.setAdvanceState(true);
                 //gsm.set(new PlayState(gsm, thisState));
+            }
+        }).on("setPresident", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    gameInfo.setPresidentIndex(data.getInt("index"));
+                    gameInfo.setTurnStatus(SecretHitler.PICKING_CHANCELLOR);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).on("initiateChancellorVote", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try{
+                    int chancellorToBe = data.getInt("position");
+                    //TODO: INFORM WHO IS CHANCELLOR ->POPUP IMAGE OR NEW SCREEN
+                    gameInfo.setTurnStatus(SecretHitler.VOTING_FOR_CHANCELLOR);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

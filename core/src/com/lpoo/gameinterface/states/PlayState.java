@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.lpoo.gamelogic.Player;
+import com.lpoo.gamelogic.SecretHitler;
 
 import java.awt.Point;
 
@@ -24,9 +26,13 @@ public class PlayState extends State {
     private Label label;
     private Stage stage;
 
+    private ArrayList<Button> buttons;
+    private Button yesButton, noButton;
     private ArrayList<Label> labels;
 
-    private int noFascistLaws = 0, noLiberalLaws = 0;
+    private Point presidentPlatePosition, chancellorPlatePosition;
+
+    private boolean hasVoted = false;
 
     protected PlayState(GameStateManager gsm, State state) {
         super(gsm, state);
@@ -43,18 +49,39 @@ public class PlayState extends State {
             labels.add(label);
             stage.addActor(label);
         }
+        //TODO: create buttons right next to labels (square small buttons)
+        //TODO: initialize yesButton and noButton -> with card vote images
+        //TODO: stage.addActor for each button
         setPositions(labels);
         presidentPlate = new Texture ("president.png");
         chancellorPlate = new Texture ("chancellor.png");
+        presidentPlatePosition = new Point(-1, -1);
+        chancellorPlatePosition = new Point(-1, -1);
     }
 
     @Override
     protected void handleInput() {
-
+        if(yesButton.isPressed()){
+            socket.emit("voteForChancellor", 1);
+            hasVoted = true;
+        }
+        else if(noButton.isPressed()){
+            socket.emit("voteForChancellor", 0);
+            hasVoted = true;
+        }
+        for(int i = 0; i < buttons.size(); i++){
+            if(buttons.get(i).isPressed()){
+                if(gameInfo.getTurnStatus() == SecretHitler.PICKING_CHANCELLOR && me.getId().equals(allPlayers.get(gameInfo.getPresidentIndex()).getId())){
+                    socket.emit("pickedChancellor", i);
+                }
+                //else if() TODO: configure clicks
+            }
+        }
     }
 
     @Override
     public void update(float dt) {
+        handleInput();
 
     }
 
