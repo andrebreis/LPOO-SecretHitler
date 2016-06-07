@@ -218,6 +218,7 @@ public class LobbyState extends State{
                     //board = new GameBoard();
                     //board.createDeck(deck);
                     gameStarted = true;
+                    gameInfo = new SecretHitler();
                     JSONArray players = data.getJSONArray("players");
                     for(int i = 0; i < players.length(); i++){
                         JSONObject player = players.getJSONObject(i);

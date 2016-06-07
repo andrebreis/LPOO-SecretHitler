@@ -41,6 +41,7 @@ public abstract class State {
         this.me = copyState.me;
         this.allPlayers = copyState.allPlayers;
         this.gameStarted = copyState.gameStarted;
+        this.gameInfo = copyState.gameInfo;
     }
 
     protected abstract void handleInput();
