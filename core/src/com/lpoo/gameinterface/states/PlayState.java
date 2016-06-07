@@ -33,6 +33,7 @@ public class PlayState extends State {
     private Stage stage;
 
     private ArrayList<Button> buttons;
+    private ArrayList<Button> cardPickButtons;
     private Button yesButton, noButton, tickButton;
     private Sprite yesSprite, noSprite, tickSprite;
     private ArrayList<Label> labels;
@@ -41,6 +42,7 @@ public class PlayState extends State {
     private boolean rotatePresident = false , rotateChancellor = false;
 
     private boolean hasVoted = false;
+    private int lastTurnStatus = -1;
 
     protected PlayState(GameStateManager gsm, State state) {
         super(gsm, state);
@@ -52,7 +54,7 @@ public class PlayState extends State {
         labels = new ArrayList<Label>();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         for(int i = 0; i < allPlayers.size(); i++){
-            label = new Label(allPlayers.get(i).getName(), skin);
+            label = new Label(allPlayers.get(i).getPosition() + "-" + allPlayers.get(i).getName(), skin);
             label.setFontScale(3);
             labels.add(label);
             stage.addActor(label);
@@ -67,16 +69,16 @@ public class PlayState extends State {
         //TODO: missing set size and position
         yesSprite = new Sprite(new Texture("yes.png"));
         yesButton = new Button(new SpriteDrawable(yesSprite));
-        yesButton.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        yesButton.setX(Gdx.graphics.getWidth() * 1 / 2 -  yesButton.getWidth() / 2);
-        yesButton.setY(Gdx.graphics.getHeight() * 1 / 2 -  yesButton.getHeight() / 2);
+        yesButton.setSize(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 8);
+        yesButton.setX(Gdx.graphics.getWidth() / 2 -  yesButton.getWidth() / 2);
+        yesButton.setY(Gdx.graphics.getHeight() / 2 -  yesButton.getHeight() / 2);
         stage.addActor(yesButton);
 
         noSprite = new Sprite(new Texture("back.png"));
         noButton = new Button(new SpriteDrawable(noSprite));
-        noButton.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        noButton.setX(Gdx.graphics.getWidth() * 1 / 2 -  noButton.getWidth() / 2);
-        noButton.setY(Gdx.graphics.getHeight()*1/4);
+        noButton.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/8);
+        noButton.setX(Gdx.graphics.getWidth()/2 -  noButton.getWidth() / 2);
+        noButton.setY(Gdx.graphics.getHeight()/4);
         stage.addActor(noButton);
 
         buttons = new ArrayList<Button>();
@@ -84,7 +86,7 @@ public class PlayState extends State {
         for(int i = 0; i < allPlayers.size(); i++){
             tickSprite = new Sprite(new Texture("tick.png"));
             tickButton = new Button(new SpriteDrawable(tickSprite));
-            yesButton.setSize(Gdx.graphics.getHeight()*1/16,Gdx.graphics.getHeight()*1/16);
+            yesButton.setSize(Gdx.graphics.getHeight()/16,Gdx.graphics.getHeight()/16);
             buttons.add(tickButton);
             stage.addActor(tickButton);
         }
@@ -103,7 +105,7 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
-        if(yesButton.isPressed()){
+        /*if(yesButton.isPressed()){
             socket.emit("voteForChancellor", 1);
             hasVoted = true;
         }
@@ -118,13 +120,66 @@ public class PlayState extends State {
                 }
                 //else if() TODO: configure clicks
             }
+        }*/
+        switch(gameInfo.getTurnStatus()){
+            case SecretHitler.PICKING_CHANCELLOR:
+                if(me.getPosition() == gameInfo.getPresidentIndex()) { //TODO: CANT GO WRONG, MAYBE CAN CUT THIS CONDITION IF ITS WORKING ACCORDLY (BUTTONS DISABLED FOR OTHERS)
+                    for (int i = 0; i < buttons.size(); i++) {
+                        if (buttons.get(i).isPressed() && !hasVoted) {
+                            socket.emit("pickedChancellor", i);
+                            hasVoted = true;
+                        }
+                    }
+                }
+                break;
+            case SecretHitler.VOTING_FOR_CHANCELLOR:
+                if(!hasVoted){
+                    if(yesButton.isPressed()){
+                        socket.emit("voteForChancellor", true);
+                        hasVoted = true;
+                    }
+                    else if(noButton.isPressed()){
+                        socket.emit("voteForChancellor", false);
+                        hasVoted = true;
+                    }
+                }
+                break;
+            case SecretHitler.PRESIDENT_PICKING_LAW:
+                if(me.getPosition() == gameInfo.getPresidentIndex()) {
+                    for (int i = 0; i < cardPickButtons.size(); i++) { //TODO: CREATE THIS ARRAYLIST
+                        if(cardPickButtons.get(i).isPressed() && !hasVoted){ //TODO: SERVER SENDS AN ARRAY OF 3 INTS AND RECEIVES THE INDEX OF THE ONE TO REMOVE
+                            socket.emit("removeLaw", i);
+                            hasVoted = true;
+                        }
+                    }
+                }
+                break;
+            case SecretHitler.CHANCELLOR_PICKING_LAW:
+                if(me.getPosition() == gameInfo.getChancellorIndex()){
+                    for(int i = 0; i < cardPickButtons.size(); i++) {
+                        if(cardPickButtons.get(i).isPressed() && !hasVoted){ //TODO: SERVER SENDS AN ARRAY OF 2 INTS AND RECEIVES THE INDEX OF THE ONE TO ELECT
+                            socket.emit("pickLaw", i);
+                            hasVoted = true;
+                        }
+                    }
+                }
+                break;
         }
     }
 
     @Override
     public void update(float dt) {
-        handleInput();
+        if(lastTurnStatus != gameInfo.getTurnStatus()){ //TODO: TURN CHANGED
+            hasVoted = false;
+            lastTurnStatus = gameInfo.getTurnStatus();
+        }
+        if(gameInfo.getTurnStatus() == -1){
+            gameInfo.setPresidentIndex(0);
+            gameInfo.setTurnStatus(SecretHitler.PICKING_CHANCELLOR);
+            lastTurnStatus = SecretHitler.PICKING_CHANCELLOR;
+        }
         setPlatePosition(allPlayers.get(gameInfo.getPresidentIndex()), presidentPlatePosition, true);
+        handleInput();
     }
 
     @Override

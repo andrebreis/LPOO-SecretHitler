@@ -214,9 +214,6 @@ public class LobbyState extends State{
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
-                    //JSONArray deck = data.getJSONArray("deck");
-                    //board = new GameBoard();
-                    //board.createDeck(deck);
                     gameStarted = true;
                     gameInfo = new SecretHitler();
                     JSONArray players = data.getJSONArray("players");
@@ -248,8 +245,63 @@ public class LobbyState extends State{
                 JSONObject data = (JSONObject) args[0];
                 try{
                     int chancellorToBe = data.getInt("position");
+                    gameInfo.setChancellorCandidateIndex(chancellorToBe);
                     //TODO: INFORM WHO IS CHANCELLOR ->POPUP IMAGE OR NEW SCREEN
                     gameInfo.setTurnStatus(SecretHitler.VOTING_FOR_CHANCELLOR);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).on("chancellorVoteResult", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try{
+                    boolean voteSuccessful = data.getBoolean("verdict");
+                    //TODO: SHOW VOTES ->POPUP IMAGE OR NEW SCREEN
+                    JSONObject votes = data.getJSONObject("votes"); //TODO: VERY IMPORTANT SHOW VOTE FOR EACH PLAYER ( id: vote)
+                    if(voteSuccessful){
+                        gameInfo.setChancellorIndex(gameInfo.getChancellorCandidateIndex());
+                        //gameInfo.setTurnStatus(SecretHitler.PRESIDENT_PICKING_LAW);
+                    }
+                    else {
+                        gameInfo.setNoFailedVotes(gameInfo.getNoFailedVotes() + 1);
+                        gameInfo.setChancellorCandidateIndex(-1);
+                        gameInfo.setTurnStatus(SecretHitler.PICKING_CHANCELLOR);
+                        //if(gameInfo.getNoFailedVotes() == 3) gameInfo.setTurnStatus(SecretHitler.CHAOS); TODO: IMPLEMENT
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).on("getPresidentOptions", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONArray data = (JSONArray) args[0];
+                try{
+                    gameInfo.setLawOptions(data);
+                    gameInfo.setTurnStatus(SecretHitler.PRESIDENT_PICKING_LAW);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).on("getChancellorOptions", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONArray data = (JSONArray) args[0];
+                try{
+                    gameInfo.setLawOptions(data);
+                    gameInfo.setTurnStatus(SecretHitler.CHANCELLOR_PICKING_LAW);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).on("endGame", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try{
+                    gameInfo.setTurnStatus(data.getInt("victor"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

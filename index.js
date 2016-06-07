@@ -9,27 +9,39 @@ var noActivePlayers;
 var LIBERAL = 0;
 var FASCIST = 1;
 var HITLER = 2;
+var FASCIST_WIN = 6;
+var HITLER_WIN = 7;
+var LIBERAL_WIN = 8;
 
 var presidentIndex = 0;
 var chancellorIndex = -1;
+var chancellorCandidateIndex = -1;
 var lastPresident = -1;
 var lastChancellor = -1;
 var noFascistLaws = 0;
 var noLiberalLaws = 0;
 var policyDeck = [];
 
+var topPolicies = [];
+
 var chancellorVotes = {};
 
 var gameStarted = false;
+var gameEnded = false;
 
 server.listen(8080, function(){
   console.log("Server is now running...");
 });
 
+
+// COMUNICATION
+
+
+
 io.on('connection', function(socket){
   if(gameStarted || playerIndex == 9)
     socket.disconnect('unauthorized');
-  else{
+  else if (!gameEnded){
   console.log("Player Connected!");
   socket.emit('getPlayers', players);
   players.push(new player(socket.id, playerIndex++));
@@ -50,15 +62,12 @@ io.on('connection', function(socket){
         }
       }
     }
-    //socket.disconnect('Ended');
     console.log(players);
   });
   socket.on('playerName', function(name){
-    console.log("ping");
     for(var i = 0; i < players.length; i++){
       if(players[i].id == socket.id){
         players[i].name = name;
-        //socket.emit('playerPosition', { position : players[i].position });
         socket.broadcast.emit('newPlayer', { id : socket.id, name : players[i].name, position: players[i].position});
         console.log(players);
       }
@@ -74,10 +83,15 @@ io.on('connection', function(socket){
     socket.broadcast.emit('setPlayers', { players : players });
   });
   socket.on('pickedChancellor', function(index){
+    if(gameEnded)
+      return;
+    chancellorCandidateIndex = index;
     socket.emit('initiateChancellorVote', { position : index });
     socket.broadcast.emit('initiateChancellorVote', { position : index });
   });
   socket.on('voteForChancellor', function(vote){
+    if(gameEnded)
+      return;
     chancellorVotes[socket.id] = vote;
     if(chancellorVotes.length == noActivePlayers){
       var voteSum = 0;
@@ -86,11 +100,77 @@ io.on('connection', function(socket){
       }
       socket.emit('chancellorVoteResult', {votes : chancellorVotes, verdict : voteSum > chancellorVotes.length/2}); //TODO: socket.on for this on java
       socket.broadcast.emit('chancellorVoteResult', {votes : chancellorVotes, verdict : voteSum > chancellorVotes.length/2});
+      if(voteSum > chancellorVotes.length/2){
+        chancellorIndex = chancellorCandidateIndex;
+        if(noFascistLaws >= 3 && players[chancellorIndex].role == HITLER){
+          gameEnded = true;
+          socket.emit('endGame', { victor : HTILER_WIN});
+          socket.broadcast.emit('endGame', { victor : HITLER_WIN});
+          return;
+        }
+        topPolicies = [];
+        if(policyDeck.length < 3){
+          shuffleDeck;
+        }
+        topPolicies.push(policyDeck.pop());
+        topPolicies.push(policyDeck.pop());
+        topPolicies.push(policyDeck.pop());
+        socket.emit('getPresidentOptions', topPolicies);
+        socket.broadcast.emit('getPresidentOptions', topPolicies);
+      }
     }
+  });
+  socket.on('removeLaw', function(index){
+    if(gameEnded)
+      return;
+    topPolicies.splice(i, 1);
+    socket.emit("getChancellorOptions", topPolicies);
+    socket.broadcast.emit("getChancellorOptions", topPolicies);
+  });
+  socket.on('pickLaw', function(index){
+    if(gameEnded)
+      return;
+    if(topPolicies[index] == FASCIST){
+      noFascistLaws++;
+    }
+    else{
+      noLiberalLaws++;
+    }
+    if(noFascistLaws == 6){
+      gameEnded = true;
+      socket.emit('endGame', { victor : FASCIST_WIN});
+      socket.broadcast.emit('endGame', { victor : FASCIST_WIN});
+      return;
+    }
+    if(noLiberalLaws == 5){
+      gameEnded = true;
+      socket.emit('endGame', { victor : LIBERAL_WIN});
+      socket.broadcast.emit('endGame', { victor : LIBERAL_WIN});
+      return;
+    }
+    lastPresident = presidentIndex;
+    do{
+      presidentIndex = (presidentIndex + 1) % players.length;
+    }while(!players[presidentIndex].playing)
+    socket.emit("setPresident", presidentIndex);
+    socket.broadcast.emit("setPresident", presidentIndex);
   });
 //players.push(new player(socket.id, playerIndex++));
 }
 });
+
+
+
+
+
+
+
+
+//GAMELOGIC
+
+
+
+
 
 function player(id, position){
   this.id = id;
@@ -118,7 +198,6 @@ function shuffleDeck(){
       policyDeck.push(LIBERAL);
     }
   }
-  return policyDeck;
 }
 
 function assignRoles(){
