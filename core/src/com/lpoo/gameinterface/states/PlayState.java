@@ -63,6 +63,7 @@ public class PlayState extends State {
         information.setFontScale(Gdx.graphics.getWidth()/800);
         stage.addActor(information);
 
+        buttons = new ArrayList<Button>();
         //TODO: maybe change size and little bit positions
         for(int i = 0; i < allPlayers.size(); i++){
             tickSprite = new Sprite(new Texture("ticks.png"));
@@ -275,7 +276,7 @@ public class PlayState extends State {
                 buttons.get(6).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(6).getWidth(),Gdx.graphics.getHeight()*4/5);
                 buttons.get(7).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
                 buttons.get(8).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(8).getWidth()/2,Gdx.graphics.getHeight()*3/40);
-                buttons.get(8).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(9).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(9).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(9).getWidth()/2,Gdx.graphics.getHeight()*3/40);
                 break;
         }
     }
