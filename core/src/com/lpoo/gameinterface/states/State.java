@@ -21,6 +21,7 @@ public abstract class State {
     protected Player me;
     protected ArrayList<Player> allPlayers;
     protected GameBoard board;
+    protected boolean advanceState;
 
     protected State (GameStateManager gsm)
     {
@@ -28,6 +29,7 @@ public abstract class State {
         this.allPlayers = new ArrayList<Player>();
         this.board = null;
         this.socket = null;
+        this.advanceState = false;
     }
 
     protected State(GameStateManager gsm, State copyState){
@@ -45,4 +47,7 @@ public abstract class State {
 
     public abstract void dispose();
 
+    public void setAdvanceState(boolean advanceState) {
+        this.advanceState = advanceState;
+    }
 }

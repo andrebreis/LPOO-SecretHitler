@@ -7,4 +7,6 @@ public class SecretHitler {
 
     public static final int LIBERAL = 0, FASCIST = 1, HITLER = 2;
 
+
+
 }

@@ -10,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
+
+import java.util.ArrayList;
 
 /**
  * Created by Vasco on 06/06/2016.
@@ -32,13 +35,12 @@ public class WaitingState extends State {
     private Stage stage;
 
 
-
     public WaitingState(GameStateManager gsm, State state) {
         super(gsm, state);
 
         background = new Texture("waitingstate.jpg");
 
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
         label = new Label("WAITING FOR PLAYERS...  " + allPlayers.size() + "/10", skin);
         label.setFontScale(Gdx.graphics.getWidth()/800);
         label.setColor(Color.BLACK);
@@ -70,12 +72,13 @@ public class WaitingState extends State {
     public void handleInput() {
         if(me.getPosition() == 0 && allPlayers.size() > 4) {
             if (startBtn.isPressed()) {
-                gsm.set(new PlayState(gsm));
-                dispose();
+                socket.emit("gameStarted");
+
+                //dispose();
             }
         }
         if(backBtn.isPressed()){
-            allPlayers.remove(me.getPosition());
+            allPlayers = new ArrayList<Player>();
             socket = socket.disconnect();
             gsm.set(new LobbyState(gsm,this));
             dispose();
@@ -88,6 +91,10 @@ public class WaitingState extends State {
 
     @Override
     public void update(float dt) {
+        if(advanceState){
+            gsm.set(new PlayState(gsm, this));
+            dispose();
+        }
         handleInput();
     }
 
