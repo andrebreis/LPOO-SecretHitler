@@ -24,6 +24,8 @@ public class PlayState extends State {
     private Texture background;
     private Texture presidentPlate;
     private Texture chancellorPlate;
+    private Texture liberalswin;
+    private Texture fascistswin;
 
     private Skin skin;
     private Label label;
@@ -86,7 +88,11 @@ public class PlayState extends State {
         noButton.setY(Gdx.graphics.getHeight()*1/4);
         stage.addActor(noButton);
 
-        //TODO: stage.addActor for each button
+        //TODO: Fascists and Liberals win
+        liberalswin = new Texture ("liberalvictory.png");
+        fascistswin = new Texture ("fascistvictory.png");
+
+        //President and chancellor
         presidentPlate = new Texture ("president.png");
         chancellorPlate = new Texture ("chancellor.png");
         presidentPlatePosition = new Point(-1, -1);
