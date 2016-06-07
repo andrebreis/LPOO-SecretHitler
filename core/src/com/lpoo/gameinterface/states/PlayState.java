@@ -2,11 +2,13 @@ package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.lpoo.gamelogic.Player;
 import com.lpoo.gamelogic.SecretHitler;
 
@@ -22,12 +24,15 @@ public class PlayState extends State {
     private Texture background;
     private Texture presidentPlate;
     private Texture chancellorPlate;
+
     private Skin skin;
     private Label label;
+    private Label information;
     private Stage stage;
 
     private ArrayList<Button> buttons;
-    private Button yesButton, noButton;
+    private Button yesButton, noButton, tickButton;
+    private Sprite yesSprite, noSprite, tickSprite;
     private ArrayList<Label> labels;
 
     private Point presidentPlatePosition, chancellorPlatePosition;
@@ -49,10 +54,39 @@ public class PlayState extends State {
             labels.add(label);
             stage.addActor(label);
         }
-        //TODO: create buttons right next to labels (square small buttons)
-        //TODO: initialize yesButton and noButton -> with card vote images
-        //TODO: stage.addActor for each button
         setPositions(labels);
+
+        //Information label missing size and position, create variable to show or not label
+        information = new Label("",skin);
+        information.setFontScale(Gdx.graphics.getWidth()/800);
+        stage.addActor(information);
+
+        //TODO: maybe change size and little bit positions
+        for(int i = 0; i < allPlayers.size(); i++){
+            tickSprite = new Sprite(new Texture("ticks.png"));
+            tickButton = new Button(new SpriteDrawable(tickSprite));
+            yesButton.setSize(Gdx.graphics.getHeight()*1/16,Gdx.graphics.getHeight()*1/16);
+            buttons.add(tickButton);
+            stage.addActor(tickButton);
+        }
+        setTicksPositions(buttons);
+
+        //TODO: missing set size and position
+        yesSprite = new Sprite(new Texture("yes.png"));
+        yesButton = new Button(new SpriteDrawable(yesSprite));
+        yesButton.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
+        yesButton.setX(Gdx.graphics.getWidth() * 1 / 2 -  yesButton.getWidth() / 2);
+        yesButton.setY(Gdx.graphics.getHeight() * 1 / 2 -  yesButton.getHeight() / 2);
+        stage.addActor(yesButton);
+
+        noSprite = new Sprite(new Texture("back.png"));
+        noButton = new Button(new SpriteDrawable(noSprite));
+        noButton.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
+        noButton.setX(Gdx.graphics.getWidth() * 1 / 2 -  noButton.getWidth() / 2);
+        noButton.setY(Gdx.graphics.getHeight()*1/4);
+        stage.addActor(noButton);
+
+        //TODO: stage.addActor for each button
         presidentPlate = new Texture ("president.png");
         chancellorPlate = new Texture ("chancellor.png");
         presidentPlatePosition = new Point(-1, -1);
@@ -156,8 +190,8 @@ public class PlayState extends State {
                labels.get(0).setPosition(0,Gdx.graphics.getHeight()*2/5);
                labels.get(1).setPosition(0,Gdx.graphics.getHeight()*4/5);
                labels.get(2).setPosition(Gdx.graphics.getWidth()*1/5,Gdx.graphics.getHeight()*14/15);
-               labels.get(3).setPosition(Gdx.graphics.getWidth()*2/5,Gdx.graphics.getHeight()*14/15);
-               labels.get(4).setPosition(Gdx.graphics.getWidth()*3/5,Gdx.graphics.getHeight()*14/15);
+               labels.get(3).setPosition(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*14/15);
+               labels.get(4).setPosition(Gdx.graphics.getWidth()*4/5,Gdx.graphics.getHeight()*14/15);
                labels.get(5).setPosition(Gdx.graphics.getWidth()*8/9,Gdx.graphics.getHeight()*2/5);
                labels.get(6).setPosition(Gdx.graphics.getWidth()*8/9,Gdx.graphics.getHeight()*4/5);
                labels.get(7).setPosition(Gdx.graphics.getWidth()*1/5,Gdx.graphics.getHeight()*1/20);
@@ -176,5 +210,67 @@ public class PlayState extends State {
                labels.get(9).setPosition(Gdx.graphics.getWidth()*4/5,Gdx.graphics.getHeight()*1/20);
                break;
        }
+    }
+
+    public void setTicksPositions(ArrayList<Button> buttons) {
+        switch (buttons.size()){
+            case 5:
+                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()/2);
+                buttons.get(1).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(1).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(2).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(3).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(3).getWidth(),Gdx.graphics.getHeight()/2);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(5).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                break;
+            case 6:
+                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()/2);
+                buttons.get(1).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(1).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(2).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(3).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(3).getWidth(),Gdx.graphics.getHeight()/2);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(4).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(5).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(5).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                break;
+            case 7:
+                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(3).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(4).getWidth(),Gdx.graphics.getHeight()/2);
+                buttons.get(5).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(5).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(6).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(6).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                break;
+            case 8:
+                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(3).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(4).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(5).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(5).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(6).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(6).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                break;
+            case 9:
+                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(3).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(4).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(5).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(5).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(6).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(6).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(7).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(8).setPosition(Gdx.graphics.getWidth()*3/5+labels.get(8).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                break;
+            case 10:
+                buttons.get(0).setPosition(labels.get(0).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(1).setPosition(labels.get(1).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(2).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(2).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(3).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(3).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(4).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(4).getWidth()/2,Gdx.graphics.getHeight()*27/30);
+                buttons.get(5).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(5).getWidth(),Gdx.graphics.getHeight()*2/5);
+                buttons.get(6).setPosition(Gdx.graphics.getWidth()*8/9-labels.get(6).getWidth(),Gdx.graphics.getHeight()*4/5);
+                buttons.get(7).setPosition(Gdx.graphics.getWidth()*1/5+labels.get(7).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(8).setPosition(Gdx.graphics.getWidth()*1/2+labels.get(8).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                buttons.get(8).setPosition(Gdx.graphics.getWidth()*4/5+labels.get(9).getWidth()/2,Gdx.graphics.getHeight()*3/40);
+                break;
+        }
     }
 }
