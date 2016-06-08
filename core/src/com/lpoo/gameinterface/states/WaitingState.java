@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
 
 import java.util.ArrayList;
@@ -34,6 +33,8 @@ public class WaitingState extends State {
 
     private Stage stage;
 
+    private boolean gameStarted = false;
+
 
     public WaitingState(GameStateManager gsm, State state) {
         super(gsm, state);
@@ -48,15 +49,15 @@ public class WaitingState extends State {
 
         startSprite = new Sprite(new Texture("start.png"));
         startBtn = new Button(new SpriteDrawable(startSprite));
-        startBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        startBtn.setX(Gdx.graphics.getWidth() * 1 / 2 - startBtn.getWidth() / 2);
-        startBtn.setY(Gdx.graphics.getHeight() * 1 / 2 - startBtn.getHeight() / 2);
+        startBtn.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() /8);
+        startBtn.setX(Gdx.graphics.getWidth() / 2 - startBtn.getWidth() / 2);
+        startBtn.setY(Gdx.graphics.getHeight() / 2 - startBtn.getHeight() / 2);
 
         backSprite = new Sprite(new Texture("back.png"));
         backBtn = new Button(new SpriteDrawable(backSprite));
-        backBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*1/8);
-        backBtn.setX(Gdx.graphics.getWidth() * 1 / 2 - startBtn.getWidth() / 2);
-        backBtn.setY(Gdx.graphics.getHeight()*1/4);
+        backBtn.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/8);
+        backBtn.setX(Gdx.graphics.getWidth()  / 2 - startBtn.getWidth() / 2);
+        backBtn.setY(Gdx.graphics.getHeight()/4);
 
 
         stage = new Stage();
@@ -71,9 +72,9 @@ public class WaitingState extends State {
     @Override
     public void handleInput() {
         if(me.getPosition() == 0 && allPlayers.size() > 4) {
-            if (startBtn.isPressed()) {
+            if (startBtn.isPressed() && !gameStarted) {
                 socket.emit("gameStarted");
-
+                gameStarted = true;
                 //dispose();
             }
         }

@@ -44,14 +44,14 @@ public class MenuState extends State{
         createJoinSprite = new Sprite(new Texture("createjoinroom.png"));
         exitSprite = new Sprite(new Texture("exit.png"));
         createJoinBtn = new Button(new SpriteDrawable(createJoinSprite));
-        createJoinBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*2/7);
+        createJoinBtn.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()*2/7);
         createJoinBtn.setX(Gdx.graphics.getWidth()*3/4-createJoinBtn.getWidth()/2);
         createJoinBtn.setY(Gdx.graphics.getHeight()/2);
 
         exitBtn = new Button(new SpriteDrawable(exitSprite));
-        exitBtn.setSize(Gdx.graphics.getWidth()*1/2,Gdx.graphics.getHeight()*2/7);
+        exitBtn.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()*2/7);
         exitBtn.setX(Gdx.graphics.getWidth()*3/4-exitBtn.getWidth()/2);
-        exitBtn.setY(Gdx.graphics.getHeight()*1/12);
+        exitBtn.setY(Gdx.graphics.getHeight()/12);
 
 
         stage = new Stage();

@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
 import com.lpoo.gamelogic.SecretHitler;
 
@@ -18,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -48,6 +46,7 @@ public class LobbyState extends State{
 
     public LobbyState(GameStateManager gsm, State state) {
         super(gsm, state);
+        gameInfo = new SecretHitler();
 
         background = new Texture("gamelobby.png");
 
@@ -140,7 +139,6 @@ public class LobbyState extends State{
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Gdx.app.log("SocketIO", "Connected");
             }
         }).on("idAndPosition", new Emitter.Listener() {
             @Override
@@ -167,9 +165,6 @@ public class LobbyState extends State{
                    // Gdx.app.log("SocketIO", "New Player Connect: " + id);
                     Player newPlayer = new Player(data.getString("id"), data.getString("name"), data.getInt("position"));
                     allPlayers.add(newPlayer);
-                    System.out.println(" Adding player" + newPlayer);
-                    for(Player p : allPlayers)
-                    System.out.println(p);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting New PlayerID");
                 }
@@ -180,7 +175,6 @@ public class LobbyState extends State{
                 JSONObject data = (JSONObject) args[0];
                 try {
                     int position = data.getInt("position");
-                    System.out.println(position);
                     if(!gameStarted){
                         allPlayers.remove(position);
                         for(int i = 0; i < allPlayers.size(); i++)
@@ -215,11 +209,9 @@ public class LobbyState extends State{
                 JSONObject data = (JSONObject) args[0];
                 try {
                     gameStarted = true;
-                    gameInfo = new SecretHitler();
                     JSONArray players = data.getJSONArray("players");
                     for(int i = 0; i < players.length(); i++){
                         JSONObject player = players.getJSONObject(i);
-                        //TODO: correct positions if needed
                         allPlayers.get(i).setRole(player.getInt("role"));
                     }
                 } catch (JSONException e) {
@@ -234,6 +226,7 @@ public class LobbyState extends State{
                 JSONObject data = (JSONObject) args[0];
                 try {
                     gameInfo.setPresidentIndex(data.getInt("index"));
+                    gameInfo.setChancellorIndex(-1);
                     gameInfo.setTurnStatus(SecretHitler.PICKING_CHANCELLOR);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -244,6 +237,7 @@ public class LobbyState extends State{
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try{
+
                     int chancellorToBe = data.getInt("position");
                     gameInfo.setChancellorCandidateIndex(chancellorToBe);
                     //TODO: INFORM WHO IS CHANCELLOR ->POPUP IMAGE OR NEW SCREEN
@@ -258,8 +252,9 @@ public class LobbyState extends State{
                 JSONObject data = (JSONObject) args[0];
                 try{
                     boolean voteSuccessful = data.getBoolean("verdict");
-                    //TODO: SHOW VOTES ->POPUP IMAGE OR NEW SCREEN
-                    JSONObject votes = data.getJSONObject("votes"); //TODO: VERY IMPORTANT SHOW VOTE FOR EACH PLAYER ( id: vote)
+
+                    JSONObject votes = data.getJSONObject("votes");
+                    System.out.println("vote: " + voteSuccessful);
                     if(voteSuccessful){
                         gameInfo.setChancellorIndex(gameInfo.getChancellorCandidateIndex());
                         //gameInfo.setTurnStatus(SecretHitler.PRESIDENT_PICKING_LAW);

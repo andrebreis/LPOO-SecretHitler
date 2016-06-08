@@ -1,8 +1,6 @@
 package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
-import com.lpoo.gamelogic.GameBoard;
 import com.lpoo.gamelogic.Player;
 import com.lpoo.gamelogic.SecretHitler;
 

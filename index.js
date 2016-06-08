@@ -30,7 +30,7 @@ var gameStarted = false;
 var gameEnded = false;
 
 server.listen(8080, function(){
-  console.log("Server is now running...");
+  //console.log("Server is now running...");
 });
 
 
@@ -42,18 +42,25 @@ io.on('connection', function(socket){
   if(gameStarted || playerIndex == 9)
     socket.disconnect('unauthorized');
   else if (!gameEnded){
-  console.log("Player Connected!");
+  //console.log("Player Connected!");
   socket.emit('getPlayers', players);
   players.push(new player(socket.id, playerIndex++));
   socket.emit('idAndPosition', { id : socket.id, position : playerIndex - 1});
   socket.on('disconnect', function(){
-    console.log("Player Disconnected!");
+  //  console.log("Player Disconnected!");
     for(var i = 0; i < players.length; i++){
       if(players[i].id == socket.id){
         socket.broadcast.emit('playerDisconnected', { position : players[i].position});
         if(gameStarted){
           players[i].playing = false;
           noActivePlayers--;
+          if(noActivePlayers == 0){
+            playerIndex = 0;
+            players = [];
+            noActivePlayers=0;
+            gameStarted = false;
+            policyDeck = [];
+          }
         }
         else {
           players.splice(i, 1);
@@ -62,59 +69,70 @@ io.on('connection', function(socket){
         }
       }
     }
-    console.log(players);
+    //console.log(players);
   });
   socket.on('playerName', function(name){
     for(var i = 0; i < players.length; i++){
       if(players[i].id == socket.id){
         players[i].name = name;
         socket.broadcast.emit('newPlayer', { id : socket.id, name : players[i].name, position: players[i].position});
-        console.log(players);
+        //console.log(players);
       }
     }
   });
   socket.on('gameStarted', function(){
-    console.log("Game Started");
-    noActivePlayers = players.length;
+    //console.log("Game Started " + socket.id);
     gameStarted = true;
     assignRoles();
-    policyDeck = shuffleDeck();
+    shuffleDeck();
     socket.emit('setPlayers', { players : players });
     socket.broadcast.emit('setPlayers', { players : players });
+    noActivePlayers = players.length;
   });
   socket.on('pickedChancellor', function(index){
+    //console.log("Picked chancellor");
     if(gameEnded)
       return;
     chancellorCandidateIndex = index;
+    //console.log("chancellor candidate " + index);
     socket.emit('initiateChancellorVote', { position : index });
     socket.broadcast.emit('initiateChancellorVote', { position : index });
+  //  console.log("emitted all");
   });
   socket.on('voteForChancellor', function(vote){
+    //console.log("" + socket. id + "voted!");
     if(gameEnded)
       return;
     chancellorVotes[socket.id] = vote;
-    if(chancellorVotes.length == noActivePlayers){
+    //console.log(chancellorVotes);
+    //console.log(Object.keys(chancellorVotes).length + " !=" + noActivePlayers);
+    if(Object.keys(chancellorVotes).length == noActivePlayers){
+      //console.log("All players voted");
       var voteSum = 0;
       for(var key in chancellorVotes){
         voteSum += chancellorVotes[key];
       }
-      socket.emit('chancellorVoteResult', {votes : chancellorVotes, verdict : voteSum > chancellorVotes.length/2}); //TODO: socket.on for this on java
-      socket.broadcast.emit('chancellorVoteResult', {votes : chancellorVotes, verdict : voteSum > chancellorVotes.length/2});
-      if(voteSum > chancellorVotes.length/2){
+      //console.log("" + voteSum + " yes's");
+      socket.emit('chancellorVoteResult', {votes : chancellorVotes, verdict : voteSum > Object.keys(chancellorVotes).length/2}); //TODO: socket.on for this on java
+      socket.broadcast.emit('chancellorVoteResult', {votes : chancellorVotes, verdict : voteSum > Object.keys(chancellorVotes).length/2});
+      if(voteSum > Object.keys(chancellorVotes).length/2){
         chancellorIndex = chancellorCandidateIndex;
         if(noFascistLaws >= 3 && players[chancellorIndex].role == HITLER){
           gameEnded = true;
-          socket.emit('endGame', { victor : HTILER_WIN});
+          socket.emit('endGame', { victor : HITLER_WIN});
           socket.broadcast.emit('endGame', { victor : HITLER_WIN});
           return;
         }
         topPolicies = [];
         if(policyDeck.length < 3){
-          shuffleDeck;
+          shuffleDeck();
         }
+        chancellorVotes = {};
+        //console.log("before: " + policyDeck);
         topPolicies.push(policyDeck.pop());
         topPolicies.push(policyDeck.pop());
         topPolicies.push(policyDeck.pop());
+        //console.log("after: " + policyDeck);
         socket.emit('getPresidentOptions', topPolicies);
         socket.broadcast.emit('getPresidentOptions', topPolicies);
       }
@@ -123,7 +141,7 @@ io.on('connection', function(socket){
   socket.on('removeLaw', function(index){
     if(gameEnded)
       return;
-    topPolicies.splice(i, 1);
+    topPolicies.splice(index, 1);
     socket.emit("getChancellorOptions", topPolicies);
     socket.broadcast.emit("getChancellorOptions", topPolicies);
   });
@@ -152,10 +170,9 @@ io.on('connection', function(socket){
     do{
       presidentIndex = (presidentIndex + 1) % players.length;
     }while(!players[presidentIndex].playing)
-    socket.emit("setPresident", presidentIndex);
-    socket.broadcast.emit("setPresident", presidentIndex);
+    socket.emit("setPresident", {index : presidentIndex});
+    socket.broadcast.emit("setPresident", {index: presidentIndex});
   });
-//players.push(new player(socket.id, playerIndex++));
 }
 });
 
