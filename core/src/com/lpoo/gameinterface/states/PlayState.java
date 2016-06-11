@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.lpoo.gamelogic.Player;
 import com.lpoo.gamelogic.SecretHitler;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 
@@ -21,8 +21,8 @@ import java.util.ArrayList;
  */
 public class PlayState extends State {
     private Texture background;
-    private Texture presidentPlate;
-    private Texture chancellorPlate;
+    private Texture presidentPlate, presidentPlateRotated;
+    private Texture chancellorPlate, chancellorPlateRotated;
     private Texture liberalsWin;
     private Texture fascistsWin;
     private Texture fascistLawTracker, liberalLawTracker;
@@ -37,9 +37,10 @@ public class PlayState extends State {
     private ArrayList<Button> cardPickButtons;
     private Button yesButton, noButton, tickButton;
     private Sprite yesSprite, noSprite, tickSprite;
+    private SpriteDrawable fascistLawSprite, liberalLawSprite;
     private ArrayList<Label> labels;
 
-    private Point presidentPlatePosition, chancellorPlatePosition;
+    private Vector2 presidentPlatePosition, chancellorPlatePosition;
     private boolean rotatePresident = false , rotateChancellor = false;
 
     private int exitCounter = 300;
@@ -50,6 +51,7 @@ public class PlayState extends State {
     protected PlayState(GameStateManager gsm, State state) {
         super(gsm, state);
         stage = new Stage();
+
         Gdx.input.setInputProcessor(stage);
 
         background = new Texture("boardgame.jpg");
@@ -134,10 +136,21 @@ public class PlayState extends State {
         liberalsWin = new Texture ("liberalvictory.png");
         fascistsWin = new Texture ("fascistvictory.png");
 
-        presidentPlatePosition = new Point(-1, -1);
-        chancellorPlatePosition = new Point(-1, -1);
+        presidentPlatePosition = new Vector2(0, 0);
+        chancellorPlatePosition = new Vector2(0, 0);
+
+        presidentPlate = new Texture("president.png");
+        presidentPlateRotated = new Texture("presidentrotate.png");
+        chancellorPlate = new Texture("chancellor.png");
+        chancellorPlateRotated = new Texture("chancellorrotate.png");
 
         cardPickButtons = new ArrayList<Button>();
+
+        liberalLawSprite = new SpriteDrawable(new Sprite(new Texture("liberal_article.png")));
+        fascistLawSprite = new SpriteDrawable(new Sprite(new Texture("fascist_article.png")));
+
+        //fascistLawButton = new Button(new SpriteDrawable(fascistLaw));
+        //liberalLawButton = new Button(new SpriteDrawable(liberalLaw));
     }
 
     @Override
@@ -200,14 +213,12 @@ public class PlayState extends State {
             hasVoted = false;
             lastTurnStatus = gameInfo.getTurnStatus();
             if(gameInfo.getTurnStatus() == SecretHitler.PRESIDENT_PICKING_LAW && me.getPosition() == gameInfo.getPresidentIndex()){
-                cardPickButtons = new ArrayList<Button>();
-                Sprite liberalLaw = new Sprite(new Texture("liberal_article.png"));
-                Sprite fascistLaw = new Sprite(new Texture("fascist_article.png"));
+                cardPickButtons.clear();
                 for(int i =0; i < gameInfo.getLawOptions().size(); i++){
                     if(gameInfo.getLawOptions().get(i) == SecretHitler.LIBERAL)
-                        cardPickButtons.add(new Button(new SpriteDrawable(liberalLaw)));
+                        cardPickButtons.add(new Button(liberalLawSprite));
                     else
-                        cardPickButtons.add(new Button(new SpriteDrawable(fascistLaw)));
+                        cardPickButtons.add(new Button(fascistLawSprite));
                     cardPickButtons.get(i).setSize(Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 8);
                     cardPickButtons.get(i).setX(Gdx.graphics.getWidth() / 6 * (i+1)  -  yesButton.getWidth() / 2);
                     cardPickButtons.get(i).setY(Gdx.graphics.getHeight() / 6  -  yesButton.getHeight() / 2);
@@ -215,14 +226,12 @@ public class PlayState extends State {
                 }
             }
             else if(gameInfo.getTurnStatus() == SecretHitler.CHANCELLOR_PICKING_LAW && me.getPosition() == gameInfo.getChancellorIndex()){
-                cardPickButtons = new ArrayList<Button>();
-                Sprite liberalLaw = new Sprite(new Texture("liberal_article.png"));
-                Sprite fascistLaw = new Sprite(new Texture("fascist_article.png"));
+                cardPickButtons.clear();
                 for(int i =0; i < gameInfo.getLawOptions().size(); i++){
                     if(gameInfo.getLawOptions().get(i) == SecretHitler.LIBERAL)
-                        cardPickButtons.add(new Button(new SpriteDrawable(liberalLaw)));
+                        cardPickButtons.add(new Button(liberalLawSprite));
                     else
-                        cardPickButtons.add(new Button(new SpriteDrawable(fascistLaw)));
+                        cardPickButtons.add(new Button(fascistLawSprite));
                     cardPickButtons.get(i).setSize(Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 8);
                     cardPickButtons.get(i).setX(Gdx.graphics.getWidth() / 6 * (i+1)  -  yesButton.getWidth() / 2);
                     cardPickButtons.get(i).setY(Gdx.graphics.getHeight() / 6  -  yesButton.getHeight() / 2);
@@ -289,20 +298,16 @@ public class PlayState extends State {
             labels.get(i).draw(sb,1);
         }
         if(rotatePresident){
-            presidentPlate = new Texture("presidentrotate.png");
-            sb.draw(presidentPlate, presidentPlatePosition.x, presidentPlatePosition.y - (Gdx.graphics.getWidth() / 25 /3), Gdx.graphics.getHeight() / (5 * 3/4), Gdx.graphics.getWidth() / 25);
+            sb.draw(presidentPlateRotated, presidentPlatePosition.x, presidentPlatePosition.y - (Gdx.graphics.getWidth() / 25 /3), Gdx.graphics.getHeight() / (5 * 3/4), Gdx.graphics.getWidth() / 25);
         }
         else {
-            presidentPlate = new Texture("president.png");
             sb.draw(presidentPlate, presidentPlatePosition.x, presidentPlatePosition.y - (Gdx.graphics.getHeight() / (5 * 3/4)/3), Gdx.graphics.getWidth() / 25, Gdx.graphics.getHeight() / (5 *3/4));
         }
         if(gameInfo.getChancellorIndex() != -1){
             if(rotateChancellor){
-                chancellorPlate = new Texture("chancellorrotate.png");
-                sb.draw(chancellorPlate, chancellorPlatePosition.x, chancellorPlatePosition.y - (Gdx.graphics.getWidth() / 25 /3), Gdx.graphics.getHeight() / (5 * 3/4), Gdx.graphics.getWidth() / 25);
+                sb.draw(chancellorPlateRotated, chancellorPlatePosition.x, chancellorPlatePosition.y - (Gdx.graphics.getWidth() / 25 /3), Gdx.graphics.getHeight() / (5 * 3/4), Gdx.graphics.getWidth() / 25);
             }
             else {
-                chancellorPlate = new Texture("chancellor.png");
                 sb.draw(chancellorPlate, chancellorPlatePosition.x, chancellorPlatePosition.y - (Gdx.graphics.getHeight() / (5 * 3/4)/3), Gdx.graphics.getWidth() / 25, Gdx.graphics.getHeight() / (5 *3/4));
             }
         }
@@ -361,23 +366,23 @@ public class PlayState extends State {
         chancellorPlate.dispose();
     }
 
-    public void  setPlatePosition(Player p, Point point, boolean isPresident){
+    public void  setPlatePosition(Player p, Vector2 point, boolean isPresident){
         if (labels.get(p.getPosition()).getX()  == 0){
-            point.setLocation(labels.get(p.getPosition()).getPrefWidth() + 10, labels.get(p.getPosition()).getY());
+            point.set(labels.get(p.getPosition()).getPrefWidth() + 10, labels.get(p.getPosition()).getY());
             if(isPresident) rotatePresident = false;
             else rotateChancellor = false;
         }
         else if(labels.get(p.getPosition()).getX()  == Gdx.graphics.getWidth() - labels.get(p.getPosition()).getPrefWidth()){
-            point.setLocation(Gdx.graphics.getWidth() - labels.get(p.getPosition()).getPrefWidth()*4,labels.get(p.getPosition()).getY());
+            point.set(Gdx.graphics.getWidth() - labels.get(p.getPosition()).getPrefWidth()*4,labels.get(p.getPosition()).getY());
             if(isPresident) rotatePresident = false;
             else rotateChancellor = false;
         } else if (labels.get(p.getPosition()).getY() == Gdx.graphics.getHeight()/40) {
-            point.setLocation(labels.get(p.getPosition()).getX(),Gdx.graphics.getHeight()/10 + 10);
+            point.set(labels.get(p.getPosition()).getX(),Gdx.graphics.getHeight()/10 + 10);
             if(isPresident) rotatePresident = true;
             else rotateChancellor = true;
         }
         else if(labels.get(p.getPosition()).getY() == Gdx.graphics.getHeight() * 14 / 15){
-            point.setLocation(labels.get(p.getPosition()).getX(),Gdx.graphics.getHeight() * 13 / 15);
+            point.set(labels.get(p.getPosition()).getX(),Gdx.graphics.getHeight() * 13 / 15);
             if(isPresident) rotatePresident = true;
             else rotateChancellor = true;
         }
