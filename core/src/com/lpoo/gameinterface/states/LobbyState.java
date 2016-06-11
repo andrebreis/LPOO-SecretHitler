@@ -1,6 +1,7 @@
 package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.lpoo.gamelogic.Player;
 import com.lpoo.gamelogic.SecretHitler;
 
@@ -16,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -226,7 +230,13 @@ public class LobbyState extends State{
                 JSONObject data = (JSONObject) args[0];
                 try {
                     gameInfo.setPresidentIndex(data.getInt("index"));
+                    System.out.println(data.getInt("index"));
                     gameInfo.setChancellorIndex(-1);
+                    int approvedLaw = data.getInt("law");
+                    if(approvedLaw == SecretHitler.FASCIST)
+                        gameInfo.setNoFascistLaws(gameInfo.getNoFascistLaws()+1);
+                    else
+                        gameInfo.setNoLiberalLaws(gameInfo.getNoLiberalLaws()+1);
                     gameInfo.setTurnStatus(SecretHitler.PICKING_CHANCELLOR);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -237,7 +247,6 @@ public class LobbyState extends State{
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try{
-
                     int chancellorToBe = data.getInt("position");
                     gameInfo.setChancellorCandidateIndex(chancellorToBe);
                     //TODO: INFORM WHO IS CHANCELLOR ->POPUP IMAGE OR NEW SCREEN
@@ -296,6 +305,21 @@ public class LobbyState extends State{
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try{
+                    FileHandle resultFile = Gdx.files.local("results.txt");
+                    if(!resultFile.exists()) {
+                        try {
+                            resultFile.file().createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    String gameResult = "";
+                    Date date = new Date(TimeUtils.millis());
+                    if(data.getInt("victor") == SecretHitler.FASCIST_WIN || data.getInt("victor") == SecretHitler.HITLER_WIN)
+                        gameResult = "The fascists won and took over the Europe! Remember this date: " + date + "\n";
+                    else
+                        gameResult = "The liberals won and saved the Europe once again! Remember this date: " + date + "\n";
+                    resultFile.writeString(gameResult,true);
                     gameInfo.setTurnStatus(data.getInt("victor"));
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.lpoo.gameinterface.states.GameStateManager;
 import com.lpoo.gameinterface.states.MenuState;
 
-public class SecretHtiler extends ApplicationAdapter {
+public class SecretHitler extends ApplicationAdapter {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 480;
 	public static final String TITLE = "Secret Hitler";

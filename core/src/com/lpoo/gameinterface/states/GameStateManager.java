@@ -4,8 +4,9 @@ package com.lpoo.gameinterface.states;
  * Created by Vasco on 05/06/2016.
  */
 
-import java.util.Stack;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import java.util.Stack;
 
 /**
  * Created by Vasco on 05/06/2016.

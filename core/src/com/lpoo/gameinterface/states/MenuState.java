@@ -1,9 +1,9 @@
 package com.lpoo.gameinterface.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,7 +15,7 @@ import com.lpoo.gamelogic.Player;
 /**
  * Created by Vasco on 05/06/2016.
  */
-public class MenuState extends State{
+public class MenuState extends State {
     private Stage stage;
 
     private Texture background;
