@@ -1,0 +1,3 @@
+[submodule "SecretHitlerServer"]
+	path = SecretHitlerServer
+	url = https://github.com/AndreBrochado/SecretHitlerServer
