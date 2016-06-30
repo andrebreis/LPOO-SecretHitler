@@ -20,6 +20,8 @@ import java.util.ArrayList;
  * Created by Vasco on 05/06/2016.
  */
 public class PlayState extends State {
+    private Texture liberalArticle, fascistArticle;
+
     private Texture background;
     private Texture presidentPlate, presidentPlateRotated;
     private Texture chancellorPlate, chancellorPlateRotated;
@@ -58,6 +60,9 @@ public class PlayState extends State {
 
         fascistLawTracker = new Texture("fascistboard.png");
         liberalLawTracker = new Texture("liberalboard.png");
+
+        liberalArticle = new Texture("liberal_article.png");
+        fascistArticle = new Texture("fascist_article.png");
 
         labels = new ArrayList<Label>();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -132,7 +137,6 @@ public class PlayState extends State {
         }
         setTicksPositions(buttons);
 
-        //TODO: Fascists and Liberals win
         liberalsWin = new Texture ("liberalvictory.png");
         fascistsWin = new Texture ("fascistvictory.png");
 
@@ -146,11 +150,9 @@ public class PlayState extends State {
 
         cardPickButtons = new ArrayList<Button>();
 
-        liberalLawSprite = new SpriteDrawable(new Sprite(new Texture("liberal_article.png")));
-        fascistLawSprite = new SpriteDrawable(new Sprite(new Texture("fascist_article.png")));
+        liberalLawSprite = new SpriteDrawable(new Sprite(liberalArticle));
+        fascistLawSprite = new SpriteDrawable(new Sprite(fascistArticle));
 
-        //fascistLawButton = new Button(new SpriteDrawable(fascistLaw));
-        //liberalLawButton = new Button(new SpriteDrawable(liberalLaw));
     }
 
     @Override
@@ -180,8 +182,8 @@ public class PlayState extends State {
                 break;
             case SecretHitler.PRESIDENT_PICKING_LAW:
                 if(me.getPosition() == gameInfo.getPresidentIndex()) {
-                    for (int i = 0; i < cardPickButtons.size(); i++) { //TODO: CREATE THIS ARRAYLIST
-                        if(cardPickButtons.get(i).isPressed() && !cardPickButtons.get(i).isDisabled() && !hasVoted){ //TODO: SERVER SENDS AN ARRAY OF 3 INTS AND RECEIVES THE INDEX OF THE ONE TO REMOVE
+                    for (int i = 0; i < cardPickButtons.size(); i++) {
+                        if(cardPickButtons.get(i).isPressed() && !cardPickButtons.get(i).isDisabled() && !hasVoted){
                             socket.emit("removeLaw", i);
                             hasVoted = true;
                         }
@@ -191,7 +193,7 @@ public class PlayState extends State {
             case SecretHitler.CHANCELLOR_PICKING_LAW:
                 if(me.getPosition() == gameInfo.getChancellorIndex()){
                     for(int i = 0; i < cardPickButtons.size(); i++) {
-                        if(cardPickButtons.get(i).isPressed() && !cardPickButtons.get(i).isDisabled() && !hasVoted){ //TODO: SERVER SENDS AN ARRAY OF 2 INTS AND RECEIVES THE INDEX OF THE ONE TO ELECT
+                        if(cardPickButtons.get(i).isPressed() && !cardPickButtons.get(i).isDisabled() && !hasVoted){
                             socket.emit("pickLaw", i);
                             hasVoted = true;
                         }
@@ -203,13 +205,7 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
-       // for(int i = 0; i < buttons.size(); i++)
-        //    buttons.get(i).setDisabled(true);
-       // noButton.setDisabled(true);
-        //yesButton.setDisabled(true);
-        //for(int i = 0; i < cardPickButtons.size(); i++)
-        //    cardPickButtons.get(i).setDisabled(true);
-        if(lastTurnStatus != gameInfo.getTurnStatus()){ //TODO: TURN CHANGED
+        if(lastTurnStatus != gameInfo.getTurnStatus()){
             hasVoted = false;
             lastTurnStatus = gameInfo.getTurnStatus();
             if(gameInfo.getTurnStatus() == SecretHitler.PRESIDENT_PICKING_LAW && me.getPosition() == gameInfo.getPresidentIndex()){
@@ -287,9 +283,12 @@ public class PlayState extends State {
         }
         sb.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         sb.draw(liberalLawTracker, Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()*5/9, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/4);
-        liberalLaws.setText(gameInfo.getNoLiberalLaws() + "/5");
-        liberalLaws.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()*5/6);
-        liberalLaws.draw(sb, 1);
+        //liberalLaws.setText(gameInfo.getNoLiberalLaws() + "/5");
+        //liberalLaws.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()*5/6);
+        //liberalLaws.draw(sb, 1);
+        for(int i = 0; i < gameInfo.getNoLiberalLaws(); i++){
+            //sb.draw(liberalArticle, 2*Gdx.graphics.getWidth()/9 + i * Gdx.graphics.getWidth()/12, Gdx.graphics.getHeight()*5/9, Gdx.graphics.getWidth()/12, Gdx.graphics.getWidth()/12);
+        }
         sb.draw(fascistLawTracker, Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()*2/9, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/4);
         liberalLaws.setText(gameInfo.getNoFascistLaws() + "/6");
         liberalLaws.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);

@@ -81,6 +81,7 @@ public class WaitingState extends State {
         if(backBtn.isPressed()){
             allPlayers = new ArrayList<Player>();
             socket = socket.disconnect();
+            socket.off();
             gsm.set(new LobbyState(gsm,this));
             dispose();
 
